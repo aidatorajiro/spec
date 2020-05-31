@@ -15,9 +15,8 @@ if __name__ == "__main__":
     graph_csr = load_npz(os.path.dirname(os.path.abspath(__file__)) + '/graph_post_graph_csr.npz')
     graph_lil = lil_matrix(graph_csr)
     d = ""
-    for ij in graph_lil.rows:
-        if len(ij) == 2:
-            [i, j] = ij
+    for [i, j] in zip(graph_lil.nonzero()[0], graph_lil.nonzero()[1]):
+        if i < j: 
             d += "M " + tostr(nodeid_to_pos[i]) + " " + tostr(nodeid_to_pos[j]) + " Z "
     
     svg = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>

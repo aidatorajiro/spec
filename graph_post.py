@@ -23,11 +23,12 @@ if __name__ == "__main__":
             percentage += 1
         ball_point = kdt.query_ball_point(nodeid_to_pos[i], r)
         for j in ball_point:
-            point_from = nodeid_to_pos[i]
-            point_to = nodeid_to_pos[j]
-            distance = math.sqrt(((point_from - point_to)**2).sum())
-            graph_lil[i,j] = distance
-            graph_lil[j,i] = distance
+            if i != j:
+                point_from = nodeid_to_pos[i]
+                point_to = nodeid_to_pos[j]
+                distance = math.sqrt(((point_from - point_to)**2).sum())
+                graph_lil[i,j] = distance
+                graph_lil[j,i] = distance
         if len(ball_point) == 0:
             print("Warning: no neighbor found for index %s" % i)
         sum_ball_point += len(ball_point)
