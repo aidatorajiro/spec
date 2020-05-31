@@ -88,7 +88,9 @@
                 <p>オレンジ色は道路、青い星は建物です。</p>
                 <p>orange colored lines are roads. blue stars are buildings.</p>
                 <p>クリックすると最寄りの道や建物が現れます。</p>
-                <p>by clicking you can see details of nearest ways or buildings.</p>
+                <p>by clicking on the screen you can see details of nearest ways.</p>
+                <p>クリックした後、他の場所をクリックするとルート検索できます。</p>
+                <p>after clicking, you can click another way to find routes.</p>
             </div>
             <div v-if="selected_building_name" class="desc_building"
             v-bind:style="{position: 'absolute', left: pos_to_pixpos(selected_building_pos)[0] + 'px', top: pos_to_pixpos(selected_building_pos)[1] + 'px'}">
