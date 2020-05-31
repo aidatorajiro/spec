@@ -2,8 +2,47 @@
 <html>
     <head>
         <title>月面通学路</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            #roadimage {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+            }
+            .building {
+                position: absolute;
+            }
+            .building_large {
+                background-image: url('hoshi.png');
+                width: 30px;
+                height: 30px;
+                transform: translate(-50%, -50%);
+            }
+            #moonimage {
+                position: absolute;
+                top: -30px;
+                left: -30px;
+            }
+        </style>
     </head>
     <body>
-        
+        <img id="moonimage" src="lroc_color_poles_8k_orig.jpg" style="width: 10922px;">
+        <img id="roadimage" src="post.png">
+        <div id="app">
+            <div class="building building_large"
+            v-for="pos of buildings['240']"
+            v-bind:style="{position: 'absolute', left: pos_to_pixpos(pos)[0] + 'px', top: pos_to_pixpos(pos)[1] + 'px'}">
+            </div>
+            <div class="desc">
+                <p>オレンジ色は道路、青い星は建物です。</p>
+                <p>orange colored lines are roads. blue stars are buildings.</p>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script src="buildings.js"></script>
+        <script src="index.js"></script>
     </body>
 </html>
