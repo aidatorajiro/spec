@@ -23,5 +23,6 @@ if __name__ == "__main__":
             arr = np.array(blob)
             g = arr.sum(0)/len(blob) # calc center of gravity
             buildings[l].append(g.tolist())
-    with open(os.path.dirname(os.path.abspath(__file__)) + "/buildings.json", "w") as f:
+    with open(os.path.dirname(os.path.abspath(__file__)) + "/buildings.js", "w") as f:
+        f.write("let buildings = ")
         json.dump(buildings, f)
