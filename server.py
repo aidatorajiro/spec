@@ -9,6 +9,17 @@ import json
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler, HTTPStatus
 from scipy.spatial import cKDTree
 
+class MyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        else:
+            return super(MyEncoder, self).default(obj)
+
 nodeid_to_pos = np.load(os.path.dirname(os.path.abspath(__file__)) + '/graph_post_nodeid_to_pos.npz')['arr_0']
 graph_csr = load_npz(os.path.dirname(os.path.abspath(__file__)) + '/graph_post_graph_csr.npz')
 # graph_lil = lil_matrix(graph_csr)
@@ -52,13 +63,13 @@ class MyHttpRequestHandler(BaseHTTPRequestHandler):
         if len(args) == 0:
             text = '{"error": "no argument"}'
         elif args[0] == 'get_shortest_path' and len(args) == 3:
-            id_from = int(args[0])
-            id_to = int(args[1])
-            text = json.dumps({"result": get_shortest_path(id_from, id_to)})
+            id_from = int(args[1])
+            id_to = int(args[2])
+            text = json.dumps({"result": get_shortest_path(id_from, id_to)}, cls = MyEncoder)
         elif args[0] == 'get_nearest_node' and len(args) == 3:
-            x = float(args[0])
-            y = float(args[1])
-            text = json.dumps({"result": get_nearest_node(x, y)})
+            x = float(args[1])
+            y = float(args[2])
+            text = json.dumps({"result": get_nearest_node(x, y)}, cls = MyEncoder)
         else:
             text = '{"error": "invalid arguments"}'
         
