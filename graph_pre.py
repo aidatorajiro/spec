@@ -24,7 +24,7 @@ def calc_distance(a, b):
     return math.sqrt((a[0] - b[0])**2 + (a[1] - b[1])**2)
 
 if __name__ == "__main__":
-    roads = shelve.open(os.path.dirname(__file__) + "/roads.shel")['roads']
+    roads = shelve.open(os.path.dirname(os.path.abspath(__file__)) + "/roads.shel")['roads']
     
     nodeset = set()
     
@@ -52,16 +52,17 @@ if __name__ == "__main__":
             id_from = posstr_to_nodeid[str_from]
             id_to = posstr_to_nodeid[str_to]
             
-            distance = calc_distance(point_from, point_to)
+            if id_from != id_to:
+                distance = calc_distance(point_from, point_to)
             
-            graph_lil[id_from,id_to] = distance
-            graph_lil[id_to,id_from] = distance
+                graph_lil[id_from,id_to] = distance
+                graph_lil[id_to,id_from] = distance
             
             str_from = str_to
             point_from = point_to
     
     print("complete! saving...")
     
-    np.savez_compressed(os.path.dirname(__file__) + '/graph_pre_nodeid_to_pos', nodeid_to_pos)
+    np.savez_compressed(os.path.dirname(os.path.abspath(__file__)) + '/graph_pre_nodeid_to_pos', nodeid_to_pos)
     
-    save_npz(os.path.dirname(__file__) + '/graph_pre_graph_csr', csr_matrix(graph_lil))
+    save_npz(os.path.dirname(os.path.abspath(__file__)) + '/graph_pre_graph_csr', csr_matrix(graph_lil))

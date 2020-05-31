@@ -8,8 +8,8 @@ import math
 from scipy.spatial import cKDTree
 
 if __name__ == "__main__":
-    nodeid_to_pos = np.load(os.path.dirname(__file__) + '/graph_pre_nodeid_to_pos.npz')['arr_0']
-    graph_csr = load_npz(os.path.dirname(__file__) + '/graph_pre_graph_csr.npz')
+    nodeid_to_pos = np.load(os.path.dirname(os.path.abspath(__file__)) + '/graph_pre_nodeid_to_pos.npz')['arr_0']
+    graph_csr = load_npz(os.path.dirname(os.path.abspath(__file__)) + '/graph_pre_graph_csr.npz')
     graph_lil = lil_matrix(graph_csr)
     kdt = cKDTree(nodeid_to_pos)
     N = len(nodeid_to_pos)
@@ -33,6 +33,6 @@ if __name__ == "__main__":
         sum_ball_point += len(ball_point)
     print("average neighbors: %s" % (sum_ball_point/N))
     
-    np.savez_compressed(os.path.dirname(__file__) + '/graph_post_nodeid_to_pos', nodeid_to_pos)
+    np.savez_compressed(os.path.dirname(os.path.abspath(__file__)) + '/graph_post_nodeid_to_pos', nodeid_to_pos)
     
-    save_npz(os.path.dirname(__file__) + '/graph_post_graph_csr', csr_matrix(graph_lil))
+    save_npz(os.path.dirname(os.path.abspath(__file__)) + '/graph_post_graph_csr', csr_matrix(graph_lil))
