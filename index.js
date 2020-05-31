@@ -75,6 +75,27 @@ var app = new Vue({
             let lev_to_suffix = {
                 "240": ["大学", "高校", "市役所", "タワー", "広場", "レストラン", "家電", "ステーション", "場", "束", "美術館", "ヒルズ", "センター", "病院", "局", "極", "クラブ", "銀行", "温泉"]
             }
+            let suffix_t = {
+                "大学": "University",
+                "高校": "HighSchool",
+                "市役所": "CityOffice",
+                "タワー": "Tower",
+                "広場": "Park",
+                "レストラン": "Restaurant",
+                "家電": "Electronics",
+                "ステーション": "Station",
+                "場": "Field",
+                "束": "Fiber",
+                "美術館": "Museum",
+                "ヒルズ": "Hills",
+                "センター": "Center",
+                "病院": "Hospital",
+                "局": "Department",
+                "極": "Climax",
+                "クラブ": "Club",
+                "銀行": "Bank",
+                "温泉": "HotSpring"
+            }
             let s = ""
             let seed = pos_seed(pos)
             for (let i = 0; i < 10; i++) {
@@ -82,7 +103,7 @@ var app = new Vue({
                 s += ret
             }
             [ret, seed] = choice(seed, lev_to_suffix[lev])
-            s += ret
+            s = s + ret + "/" + suffix_t[ret]
             return s
         },
         query_building_desc: function (lev) {
