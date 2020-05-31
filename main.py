@@ -83,7 +83,7 @@ class MyHttpRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(encoded)
 
 def run(server_class=ThreadingHTTPServer, handler_class=MyHttpRequestHandler):
-    server_address = ('', 8000)
+    server_address = ('', os.environ['PORT'])
     httpd = server_class(server_address, handler_class)
     httpd.serve_forever()
 
