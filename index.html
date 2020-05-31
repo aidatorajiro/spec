@@ -92,7 +92,7 @@
             </div>
             <div v-if="selected_building_name" class="desc_building"
             v-bind:style="{position: 'absolute', left: pos_to_pixpos(selected_building_pos)[0] + 'px', top: pos_to_pixpos(selected_building_pos)[1] + 'px'}">
-                <p>{{selected_building_name}} LV{{selected_building_level}}</p>
+                <p>{{selected_building_name}}</p>
                 <p>{{query_building_desc(selected_building_level)}}</p>
             </div>
             <div v-if="nearest_node" class="desc_node"
