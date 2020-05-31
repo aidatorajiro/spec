@@ -6,6 +6,7 @@
             * {
                 margin: 0;
                 padding: 0;
+                color:#081646;
             }
             #roadimage {
                 position: absolute;
@@ -21,6 +22,7 @@
                 width: 30px;
                 height: 30px;
                 transform: translate(-50%, -50%);
+                opacity: 0.8;
             }
             #moonimage {
                 position: absolute;
@@ -31,6 +33,7 @@
                 position: fixed;
                 top: 30px;
                 left:30px;
+                background-color: #FFFFFF80;
             }
             #clickwrap {
                 position: fixed;
@@ -40,6 +43,26 @@
                 height: 100%;
                 cursor: pointer;
                 z-index: 10;
+            }
+            @keyframes rot {
+            0%   { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+            }
+            .nearest_node {
+                animation: rot 1s linear infinite;
+                text-align: center;
+                font-size: 30px;
+                margin-top: -25px;
+                margin-left: -25px;
+                position: relative;
+            }
+            .desc_node {
+                width: 300px;
+                background:#d5d6d880;
+            }
+            .desc_building {
+                width: 300px;
+                background:#d5d6d880;
             }
         </style>
     </head>
@@ -51,13 +74,32 @@
             <div v-for="level of ['240']">
             <div class="building building_large"
             v-for="pos of buildings[level]"
-            v-bind:style="{position: 'absolute', left: pos_to_pixpos(pos)[0] + 'px', top: pos_to_pixpos(pos)[1] + 'px'}">
+            v-bind:style="{position: 'absolute', left: pos_to_pixpos(pos)[0] + 'px', top: pos_to_pixpos(pos)[1] + 'px'}"
+            v-on:mouseenter="selected_building_name = query_building_name(pos, level); selected_building_pos = pos; selected_building_level = level;"
+            v-on:mouseleave="selected_building_name = undefined">
             </div>
             </div>
+            <div v-if="nearest_node" class="nearest_node"
+            v-bind:style="{position: 'absolute', left: pos_to_pixpos(nearest_node[1])[0] + 'px', top: pos_to_pixpos(nearest_node[1])[1] + 'px'}">あ</div>
+            <div v-if="shortest_path" class="shortest_path" v-for="[nodeid, pos] of shortest_path"
+            v-bind:style="{position: 'absolute', left: pos_to_pixpos(pos)[0] + 'px', top: pos_to_pixpos(pos)[1] + 'px'}">あ</div>
             <div class="desc">
-                <p>月面を歩こう！</p>
+                <p>つきをあるいてみる</p>
                 <p>オレンジ色は道路、青い星は建物です。</p>
                 <p>orange colored lines are roads. blue stars are buildings.</p>
+                <p>クリックすると最寄りの道や建物が現れます。</p>
+                <p>by clicking you can see details of nearest ways or buildings.</p>
+            </div>
+            <div v-if="selected_building_name" class="desc_building"
+            v-bind:style="{position: 'absolute', left: pos_to_pixpos(selected_building_pos)[0] + 'px', top: pos_to_pixpos(selected_building_pos)[1] + 'px'}">
+                <p>{{selected_building_name}} LV{{selected_building_level}}</p>
+                <p>{{query_building_desc(selected_building_level)}}</p>
+            </div>
+            <div v-if="nearest_node" class="desc_node"
+            v-bind:style="{position: 'absolute', left: pos_to_pixpos(nearest_node[1])[0] + 'px', top: pos_to_pixpos(nearest_node[1])[1] + 'px'}">
+                <p>ID {{nearest_node[0]}}</p>
+                <p>Position {{nearest_node[1]}}</p>
+                <p>もういちど別の道をクリックすると最短経路が表示されます</p>
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/vue"></script>

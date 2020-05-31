@@ -19,21 +19,25 @@ let vert_offset = [0, 1128.575]
 let magnification = 1
 let server = "http://localhost:8000"
 
-function XorShift(x, y, z, w) {
+function XorShift(seed) {
+    let [x, y, z, w] = seed;
+
     let t;
 
     t = x ^ (x << 11);
     x = y; y = z; z = w;
-    return w = (w ^ (w >>> 19)) ^ (t ^ (t >>> 8)); 
+    w = (w ^ (w >>> 19)) ^ (t ^ (t >>> 8));
+
+    return [x, y, z, w]
 }
 
 function pos_seed(pos) {
-    return undefined; // todo
+    return [415866776, 582600044, Math.floor(pos[0]*100), Math.floor(pos[1]*100)]; // todo
 }
 
 function choice(seed, arr) {
-    XorShift()
-    return arr[Math.random()*arr.length]
+    let val = XorShift(seed)
+    return [arr[Math.abs(val[3]) % arr.length], val]
 }
 
 var app = new Vue({
@@ -42,7 +46,10 @@ var app = new Vue({
       message: 'Hello Vue!',
       buildings: buildings,
       shortest_path: undefined,
-      nearest_node: undefined
+      nearest_node: undefined,
+      selected_building_name: undefined,
+      selected_building_level: undefined,
+      selected_building_pos: undefined
     },
     methods: {
         pos_to_pixpos: function (pos) {
@@ -51,11 +58,17 @@ var app = new Vue({
                 (pos[1] + vert_offset[1])*(dpi/one_inch_in_mm)*magnification
             ]
         },
+        pixpos_to_pos: function (pixpos) {
+            return [
+                (pixpos[0]/magnification/(dpi/one_inch_in_mm)) - vert_offset[0],
+                (pixpos[1]/magnification/(dpi/one_inch_in_mm)) - vert_offset[1]
+            ]
+        },
         get_shortest_path: async function (id_from, id_to) {
             this.shortest_path = (await (await fetch(server + "/get_shortest_path/" + id_from + "/" + id_to)).json()).result
         },
-        get_nearest_node: async function (x, y) {
-            this.nearest_node = (await (await fetch(server + "/get_nearest_node/" + x + "/" + y)).json()).result
+        get_nearest_node: async function (pos) {
+            this.nearest_node = (await (await fetch(server + "/get_nearest_node/" + pos[0] + "/" + pos[1])).json()).result
         },
         query_building_name: function (pos, lev) {
             let lst = ["ア", "ディ", "ノッ", "パ", "せ", "すん", "メモ", "ダー", "ゲッ", "ギ", "ノ"]
@@ -63,10 +76,13 @@ var app = new Vue({
                 "240": ["大学", "高校", "市役所", "タワー", "広場", "レストラン", "家電", "ステーション", "場", "束", "美術館", "ヒルズ", "センター", "病院", "局", "極", "クラブ", "銀行", "温泉"]
             }
             let s = ""
+            let seed = pos_seed(pos)
             for (let i = 0; i < 10; i++) {
-                s += choice(pos_seed(pos), lst)
+                [ret, seed] = choice(seed, lst)
+                s += ret
             }
-            s += choice(pos_seed(pos), lev_to_suffix[lev])
+            [ret, seed] = choice(seed, lev_to_suffix[lev])
+            s += ret
             return s
         },
         query_building_desc: function (lev) {
@@ -83,8 +99,16 @@ var app = new Vue({
         query_building_rating: function () {
             // sigma 1, mu 3.25
         },
-        clickev(ev) {
-            console.log(ev)
+        async clickev(ev) {
+            let pos = this.pixpos_to_pos([ev.pageX, ev.pageY])
+            if (this.nearest_node === undefined) {
+                console.log(pos)
+                await this.get_nearest_node(pos)
+            } else {
+                let id_from = this.nearest_node[0]
+                await this.get_nearest_node(pos)
+                await this.get_shortest_path(id_from, this.nearest_node[0])
+            }
         }
     }
 })
