@@ -8,7 +8,7 @@ import math
 from scipy.spatial import cKDTree
 
 def tostr(pos):
-    return str(pos[0]) + str(pos[1])
+    return str(pos[0]) + ',' + str(pos[1])
 
 if __name__ == "__main__":
     nodeid_to_pos = np.load(os.path.dirname(os.path.abspath(__file__)) + '/graph_post_nodeid_to_pos.npz')['arr_0']
