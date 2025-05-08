@@ -42,7 +42,7 @@ function choice(seed, arr) {
 
 var app = {
     el: '#app',
-    data: {
+    data: () => ({
       message: 'Hello Vue!',
       buildings: buildings,
       shortest_path: undefined,
@@ -50,7 +50,7 @@ var app = {
       selected_building_name: undefined,
       selected_building_level: undefined,
       selected_building_pos: undefined
-    },
+    }),
     methods: {
         pos_to_pixpos: function (pos) {
             return [
