@@ -17,7 +17,7 @@ let one_inch_in_mm = 25.4
 let dpi = 96
 let vert_offset = [0, 1128.575]
 let magnification = 1
-let server = "api"
+let server = "/api"
 
 function XorShift(seed) {
     let [x, y, z, w] = seed;
