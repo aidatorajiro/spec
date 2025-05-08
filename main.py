@@ -10,15 +10,15 @@ from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler, HTTPStatus
 from scipy.spatial import cKDTree
 
 class MyEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.integer):
-            return int(obj)
-        elif isinstance(obj, np.floating):
-            return float(obj)
-        elif isinstance(obj, np.ndarray):
-            return obj.tolist()
+    def default(self, o):
+        if isinstance(o, np.integer):
+            return int(o)
+        elif isinstance(o, np.floating):
+            return float(o)
+        elif isinstance(o, np.ndarray):
+            return o.tolist()
         else:
-            return super(MyEncoder, self).default(obj)
+            return super(MyEncoder, self).default(o)
 
 nodeid_to_pos = np.load(os.path.dirname(os.path.abspath(__file__)) + '/graph_post_nodeid_to_pos.npz')['arr_0']
 graph_csr = load_npz(os.path.dirname(os.path.abspath(__file__)) + '/graph_post_graph_csr.npz')
@@ -83,7 +83,7 @@ class MyHttpRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(encoded)
 
 def run(server_class=ThreadingHTTPServer, handler_class=MyHttpRequestHandler):
-    server_address = ('', int(os.environ['PORT']) if 'PORT' in os.environ else 8000)
+    server_address = ('', int(os.environ['PORT']) if 'PORT' in os.environ else 3002)
     httpd = server_class(server_address, handler_class)
     httpd.serve_forever()
 
