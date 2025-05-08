@@ -11,4 +11,4 @@ create-pages:
   # Functions that should be executed before the build script is run
   script:
     - mkdir public
-    - mv *.html *.js public
+    - mv *.html *.js *.jpg *.png *.svg public
