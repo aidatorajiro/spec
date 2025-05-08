@@ -40,7 +40,7 @@ function choice(seed, arr) {
     return [arr[Math.abs(val[3]) % arr.length], val]
 }
 
-var app = new Vue({
+var app = {
     el: '#app',
     data: {
       message: 'Hello Vue!',
@@ -132,4 +132,7 @@ var app = new Vue({
             }
         }
     }
-})
+}
+
+
+Vue.createApp(app).mount('#app')
